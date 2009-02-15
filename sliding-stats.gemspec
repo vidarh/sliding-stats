@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
  
   s.name = 'sliding-stats'
   s.version = '0.2.2'
-  s.date = '2009-02-14'
+  s.date = '2009-02-15'
  
   s.description = "Rack Middleware to provide a 'sliding view' over the last N requests to your web app"
   s.summary = s.description

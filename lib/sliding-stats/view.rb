@@ -21,7 +21,7 @@ module SlidingStats
       r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{@base}/referers.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*@window.stats.referers.size}px;\"></div>")
       r.write("<h2>Most recent pages</h2>")
       r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{@base}/pages.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*@window.stats.pages.size}px;\"></div>")
-      r.write("<h2>Most recent pages grouped by referrer</h2>")
+      r.write("<h2>Most recent referrers broken down by pages</h2>")
       r.write("<table border='1' style=\"display:inline; margin-top: 20px; margin-left: 100px; width: 950px; \"><tr><th>Referer</th><th>Pages</th></tr>\n")
       @window.stats.referers_to_pages.sort_by{|k,v| -v[:total]}.each do |k,v|
         r.write("<tr><td>#{CGI.escapeHTML(k)}</td> <td><table>")
@@ -35,7 +35,7 @@ module SlidingStats
         r.write("</table></td></tr>\n")
       end
       r.write("</table>")
-      r.write("<div style='margin-top: 50px'>Stats by <a href='http://www.hokstad.com/slidingstats'>Sliding Stats</a> -- Copyright 2009 <a href='http://www.hokstad.com/'>Vidar Hokstad</a></div>")
+      r.write("<div style='margin-top: 50px'>Stats by <a href='http://www.hokstad.com/slidingstats'>Sliding Stats</a> -- Copyright 2009 <a href='http://www.hokstad.com/'>Vidar Hokstad</a>. </div>")
       r.write("</body></html>")
       r.finish
     end

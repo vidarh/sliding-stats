@@ -6,8 +6,8 @@ module SlidingStats
   class Stats
     attr_reader :referers, :pages, :referers_to_pages
     def initialize request,ex_referers,ex_pages
-      @exclude_referers = ex_referers
-      @exclude_pages = ex_pages
+      @exclude_referers = ex_referers || []
+      @exclude_pages = ex_pages || []
 
       @referers = {}
       @pages = {}
@@ -46,20 +46,22 @@ module SlidingStats
       ref = r["HTTP_REFERER"]
       req = r["REQUEST_URI"]
 
-      ex_ref = @exclude_referer.detect{|pat| ref =~ pat}
-      ex_req = @exclude_referer.detect{|pat| req =~ pat}
+      ex_ref = @exclude_referers.detect{|pat| ref =~ pat}
+      ex_req = @exclude_pages.detect{|pat| req =~ pat}
 
       if !ex_ref
-        @referers[ref] -= 1
+        @referers[ref] -= 1 if @referers[ref]
       end
 
       if !ex_req
-        @pages[req] -= 1
+        @pages[req] -= 1 if @pages[ref]
       end
 
       if !ex_ref && !ex_req
-        @referers_to_pages[ref][req] -= 1
-        @referers_to_pages[ref][:total] -= 1
+        if @referers_to_pages[ref]
+          @referers_to_pages[ref][req] -= 1 if @referers_to_pages[ref][req]
+          @referers_to_pages[ref][:total] -= 1
+        end
       end
     end
   end

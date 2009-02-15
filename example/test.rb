@@ -8,8 +8,8 @@ opts = {
   :limit => 1000,
   :persist => 10,
   :exclude_referers => [
-    /http:\/\/www\.hokstad\.com/,             # Not interested in seeing internal clicks                                             
-    /http:\/\/search.live.com\/results.aspx/, # MSN referer spam                                                                     
+    /http:\/\/www\.hokstad\.com/,             # Not interested in seeing internal clicks
+    /http:\/\/search.live.com\/results.aspx/, # MSN referer spam
     /^-/
   ],
   :exclude_pages => [
