@@ -7,23 +7,18 @@ module SlidingStats
   # view by subclassing and overriding the #show method, or replacing it
   # completely.
   class View
-    def initialize app, base
-      @app = app
-      @base = base
-    end
-
-    def show
+    def show(data)
       r = Rack::Response.new
       r.write("<html><head><title>Sliding Stats</title><style>h2 {margin-top: 20px;}</style> <body>")
-      r.write("<h1>Sliding Stats<h1>")
+      r.write("<h1>Sliding Stats</h1>")
       # Setting the size here is a *hack*. Need to fix that
       r.write("<h2>Most recent referrers</h2>")
-      r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{@base}/referers.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*@window.stats.referers.size}px;\"></div>")
+      r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{data[:base]}/referers.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*data[:referers].size}px;\"></div>")
       r.write("<h2>Most recent pages</h2>")
-      r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{@base}/pages.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*@window.stats.pages.size}px;\"></div>")
+      r.write("<div style='width: 1000px;'><embed pluginspage=\"http://www.adobe.com/svg/viewer/install/\" type=\"image/svg+xml\" src=\"#{data[:base]}/pages.svg\" style=\"margin-left: 50px; width: 1000px; height: #{40 + 20*data[:pages].size}px;\"></div>")
       r.write("<h2>Most recent referrers broken down by pages</h2>")
       r.write("<table border='1' style=\"display:inline; margin-top: 20px; margin-left: 100px; width: 950px; \"><tr><th>Referer</th><th>Pages</th></tr>\n")
-      @window.stats.referers_to_pages.sort_by{|k,v| -v[:total]}.each do |k,v|
+      data[:referers_to_pages].each do |k,v|
         r.write("<tr><td>#{CGI.escapeHTML(k)}</td> <td><table>")
         total = v[:total]
         if v.size > 2 # include :total
@@ -43,7 +38,7 @@ module SlidingStats
     def show_svg(src)
       fields = []
       data = []
-      src.sort_by{|k,v| -v}.each do |k,v|
+      src.each do |k,v|
         if k != "-" # Excluding because of referers
           k = k[0..79] + "..." if k.length > 80
           fields << CGI.escapeHTML(k)
@@ -69,25 +64,6 @@ module SlidingStats
       r["Content-Type"] = "image/svg+xml"
       r.write(graph.burn)
       r.finish
-    end
-
-    def call env
-      return Rack::Response.new("Missing 'slidingstats' object -- did you forget to set up SlidingStats::Window before SlidingStats::View ? ").finish if !env["slidingstats"]
- 
-      uri = env["REQUEST_URI"]
-      @window = env["slidingstats"]
-
-      case uri
-      when @base
-        return show
-      when @base+"/referers.svg"
-        return show_svg(@window.stats.referers)
-      when @base+"/pages.svg"
-        return show_svg(@window.stats.pages)
-      else
-        return @app.call(env) if @app
-        return Rack::Response.new("(empty)").finish
-      end
     end
   end
 end

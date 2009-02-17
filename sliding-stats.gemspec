@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
  
   s.name = 'sliding-stats'
-  s.version = '0.2.2'
-  s.date = '2009-02-15'
+  s.version = '0.2.3'
+  s.date = '2009-02-16'
  
   s.description = "Rack Middleware to provide a 'sliding view' over the last N requests to your web app"
   s.summary = s.description
@@ -18,7 +18,12 @@ Gem::Specification.new do |s|
     README.rdoc
     Rakefile
     example/test.rb
+    features/stats.feature
+    features/step_definitions/stats_steps.rb
+    features/step_definitions/window_steps.rb
+    features/window.feature
     lib/sliding-stats.rb
+    lib/sliding-stats/controller.rb
     lib/sliding-stats/persist.rb
     lib/sliding-stats/stats.rb
     lib/sliding-stats/view.rb
