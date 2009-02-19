@@ -21,6 +21,9 @@ Feature: Maintain stats
 	When I remove <requests> requests that are not excluded
 	Then there should be <total> pageviews
 	And there should be <total> referrers
+    And there should be no pages rows with value 0
+	And there should be no referers rows with value 0
+	And there should be no rows with 0 in referers_to_pages
  
   Examples:
 	| start | requests | total |

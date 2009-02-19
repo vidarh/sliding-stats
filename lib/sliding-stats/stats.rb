@@ -49,19 +49,23 @@ module SlidingStats
       ex_ref = @exclude_referers.detect{|pat| ref =~ pat}
       ex_req = @exclude_pages.detect{|pat| req =~ pat}
 
-      if !ex_ref
-        @referers[ref] -= 1 if @referers[ref]
+      if !ex_ref && @referers[ref]
+        @referers[ref] -= 1 
+        @referers.delete(ref) if @referers[ref] <= 0
       end
 
-      if !ex_req
-        @pages[req] -= 1 if @pages[ref]
+      if !ex_req && @pages[req]
+        @pages[req] -= 1
+        @pages.delete(req) if @pages[req] <= 0
       end
 
-      if !ex_ref && !ex_req
-        if @referers_to_pages[ref]
-          @referers_to_pages[ref][req] -= 1 if @referers_to_pages[ref][req]
-          @referers_to_pages[ref][:total] -= 1
+      if !ex_ref && !ex_req && @referers_to_pages[ref]
+        if @referers_to_pages[ref][req]
+          @referers_to_pages[ref][req] -= 1 
+          @referers_to_pages[ref].delete(req) if @referers_to_pages[ref][req] <= 0
         end
+        @referers_to_pages[ref][:total] -= 1
+        @referers_to_pages.delete(ref) if @referers_to_pages[ref][:total] <= 0
       end
     end
   end
