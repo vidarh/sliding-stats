@@ -5,17 +5,35 @@
 require 'sliding-stats'
 
 opts = {
+  # The number of requests that is considered
   :limit => 1000,
-  :persist => 10,
-  :exclude_referers => [
-    /http:\/\/www\.hokstad\.com/,             # Not interested in seeing internal clicks
-    /http:\/\/search.live.com\/results.aspx/, # MSN referer spam
-    /^-/
-  ],
-  :exclude_pages => [
-    /\/referers/, /\/stats.*/,
+
+  # If set to an integer, the number of requests between each time the data is persisted
+  # (using Marshal) to /var/tmp/slidingstats. You can provide a path by passing
+  # SlidingStats::Persist.new(number, path) instead, or you can provide any class that
+  # provides a #load and #save method -- see SlidingStats::Persist
+  :persist => nil,
+
+  # Pages where either the request or referrer match :ignore is not processed further,
+  # and doesn't count towards :limit
+  :ignore => [ 
     /\.xml/, /\/feed/, /\.rdf/, /\.ico/, /\/static\//,/\/robots.txt/
+    /\/referers/, /\/stats.*/,
+    /http:\/\/search.live.com\/results.aspx/, # MSN referer spam
   ],
+
+  # Exclude entries from the referer graph and the referer to pages table
+  :exclude_referers => [
+    /http:\/\/www\.hokstad\.com/,  # Not interested in seeing internal clicks
+    /^-/                           # Direct traffic.
+  ],
+
+  # Exclude entries from the page graph and referer to pages table.
+  :exclude_pages => [
+  ],
+
+  # Rewrite referrer entries to make them more friendly, and group together
+  # referrers that don't have exactly the same URL
   :rewrite_referers =>
     [
     [/http:\/\/.*\.google\..*?[?&]q=([^&]*)?&*.*/,"Google Search: '\\1'"],
@@ -23,7 +41,7 @@ opts = {
     ]
 }
 
-view   = SlidingStats::View.new(nil,"/stats")
+view   = SlidingStats::Controller.new(nil,"/stats")
 window = SlidingStats::Window.new(view, opts)
 
 # First we feed it stats from STDIN:
