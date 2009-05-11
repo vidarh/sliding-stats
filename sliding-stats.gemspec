@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
  
   s.name = 'sliding-stats'
-  s.version = '0.2.6'
+  s.version = '0.2.7'
   s.date = '2009-03-06'
  
   s.description = "Rack Middleware to provide a 'sliding view' over the last N requests to your web app"
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.test_files = s.files.select {|path| path =~ /^test\/spec_.*\.rb/}
  
   s.extra_rdoc_files = %w[]
-  s.add_dependency 'rack', '~> 0.9.1'
+  s.add_dependency 'rack', '>= 0.9.1'
   #s.add_development_dependency 'json', '>= 1.1'
  
   s.has_rdoc = true
