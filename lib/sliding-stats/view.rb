@@ -1,4 +1,4 @@
-require 'SVG/Graph/BarHorizontal'
+require 'svg_graph'
 require 'rack'
 
 module SlidingStats
